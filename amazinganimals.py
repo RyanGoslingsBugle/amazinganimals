@@ -6,10 +6,10 @@ from io import BytesIO
 import random, requests
 
 
-APP_KEY = xxxxxx
-APP_SECRET = xxxxxx
-OAUTH_TOKEN = xxxxxx
-OAUTH_TOKEN_SECRET = xxxxxx
+APP_KEY = 'fLarf93EjhSqZE14W8xparBZR'
+APP_SECRET = 'GOJPDBKFyOwpWikiMT46lXJz52dGH8Ycx8QNvYJRp0cmFppZ0f'
+OAUTH_TOKEN = '2876370070-nXgvH0CLMpdEqcVWaX9VyO08TqHHGCajUOOQwPD'
+OAUTH_TOKEN_SECRET = 'f9270Icba1za0VaF6PwoURMZIO7BFzz92AlVZxkoc3AtR'
 
 api = Twython(APP_KEY, APP_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
@@ -17,21 +17,21 @@ def get_followers():
     """
     Automatically follows all new followers, and sends them a welcome message.
     """
-    following = api.get_friends_ids()
-    followers = api.get_followers_ids()
+    following = api.get_friends_ids(screen_name='endangeredbot')
+    followers = api.get_followers_ids(screen_name='endangeredbot')
 
     not_following_back = []
     
-    for f in followers:
-        if f not in following:
+    for f in followers['ids']:
+        if f not in following['ids']:
                 not_following_back.append(f)
 
     print not_following_back    
 
-    for user_id in not_following_back:
+    for follower_id in not_following_back:
         try:
-            api.create_friendship(user_id)
-            user = api.show_user(user_id)
+            api.create_friendship(user_id=follower_id)
+            user = api.show_user(user_id=follower_id)
             api.update_status(status= '@' + user.get_screen_name() + ' Thanks for following. For more visit www.iucnredlist.org or www.arkive.org.')
         except Exception as e:
             print("error: %s" % (str(e)))
